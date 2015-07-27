@@ -28,6 +28,7 @@
 #include "xwalk/runtime/common/xwalk_localized_error.h"
 #include "xwalk/runtime/renderer/isolated_file_system.h"
 #include "xwalk/runtime/renderer/pepper/pepper_helper.h"
+#include "xwalk/runtime/renderer/xwalk_key_systems.h"
 
 #if defined(OS_ANDROID)
 #include "xwalk/runtime/browser/android/net/url_constants.h"
@@ -281,6 +282,12 @@ bool XWalkContentRendererClient::WillSendRequest(blink::WebFrame* frame,
   return true;
 #endif
 }
+
+void XWalkContentRendererClient::AddKeySystems(
+    std::vector<media::KeySystemInfo>* key_systems) {
+  AddXwalkKeySystems(key_systems);
+}
+
 
 void XWalkContentRendererClient::GetNavigationErrorStrings(
     content::RenderView* render_view,

@@ -4,6 +4,9 @@
 #ifndef XWALK_RUNTIME_BROWSER_XWALK_RENDER_MESSAGE_FILTER_H_
 #define XWALK_RUNTIME_BROWSER_XWALK_RENDER_MESSAGE_FILTER_H_
 
+#include <string>
+
+#include "base/strings/string16.h"
 #include "content/public/browser/browser_message_filter.h"
 #include "url/gurl.h"
 
@@ -17,6 +20,21 @@ class XWalkRenderMessageFilter : public content::BrowserMessageFilter {
 
  private:
   void OnOpenLinkExternal(const GURL& url);
+#if defined(ENABLE_PEPPER_CDMS)
+  // Returns whether any internal plugin supporting |mime_type| is registered
+  // and enabled. Does not determine whether the plugin can actually be
+  // instantiated (e.g. whether it has all its dependencies).
+  // When the returned *|is_available| is true, |additional_param_names| and
+  // |additional_param_values| contain the name-value pairs, if any, specified
+  // for the *first* non-disabled plugin found that is registered for
+  // |mime_type|.
+  void OnIsInternalPluginAvailableForMimeType(
+      const std::string& mime_type,
+      bool* is_available,
+      std::vector<base::string16>* additional_param_names,
+      std::vector<base::string16>* additional_param_values);
+#endif
+
   ~XWalkRenderMessageFilter() override {}
 
   DISALLOW_COPY_AND_ASSIGN(XWalkRenderMessageFilter);

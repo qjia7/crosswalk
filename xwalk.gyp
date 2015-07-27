@@ -39,6 +39,7 @@
         '../components/components.gyp:autofill_content_browser',
         '../components/components.gyp:autofill_content_renderer',
         '../components/components.gyp:autofill_core_browser',
+        '../components/components.gyp:cdm_renderer',
         '../components/components.gyp:devtools_http_handler',
         '../components/components.gyp:user_prefs',
         '../components/components.gyp:visitedlink_browser',
@@ -315,6 +316,8 @@
         'runtime/renderer/tizen/xwalk_render_view_ext_tizen.h',
         'runtime/renderer/xwalk_content_renderer_client.cc',
         'runtime/renderer/xwalk_content_renderer_client.h',
+        'runtime/renderer/xwalk_key_systems.cc',
+        'runtime/renderer/xwalk_key_systems.h',
         'runtime/renderer/xwalk_render_process_observer_generic.cc',
         'runtime/renderer/xwalk_render_process_observer_generic.h',
       ],
@@ -360,6 +363,7 @@
         }],
         ['OS=="android"',{
           'dependencies':[
+            '../components/components.gyp:cdm_browser',
             'xwalk_core_jar_jni',
             'xwalk_core_native_jni',
           ],
