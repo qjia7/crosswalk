@@ -60,6 +60,16 @@ class XWalkContentRendererClient
                        const GURL& url,
                        const GURL& first_party_for_cookies,
                        GURL* new_url) override;
+
+  // Allows the embedder to override creating a plugin. If it returns true, then
+  // |plugin| will contain the created plugin, although it could be NULL. If it
+  // returns false, the content layer will create the plugin.
+  bool OverrideCreatePlugin(
+      content::RenderFrame* render_frame,
+      blink::WebLocalFrame* frame,
+      const blink::WebPluginParams& params,
+      blink::WebPlugin** plugin) override;
+
   void AddKeySystems(std::vector<media::KeySystemInfo>* key_systems) override;
 
  protected:

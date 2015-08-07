@@ -283,6 +283,15 @@ bool XWalkContentRendererClient::WillSendRequest(blink::WebFrame* frame,
 #endif
 }
 
+bool XWalkContentRendererClient::OverrideCreatePlugin(
+  content::RenderFrame* render_frame,
+  blink::WebLocalFrame* frame,
+  const blink::WebPluginParams& params,
+  blink::WebPlugin** plugin) {
+  DVLOG(1) << "******** this is in OverrideCreatePlugin";
+  return false;
+}
+
 void XWalkContentRendererClient::AddKeySystems(
     std::vector<media::KeySystemInfo>* key_systems) {
   AddXwalkKeySystems(key_systems);

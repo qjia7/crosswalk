@@ -35,6 +35,8 @@
 #include "xwalk/runtime/renderer/tizen/xwalk_content_renderer_client_tizen.h"
 #endif
 
+#include "widevine_cdm_version.h"  // In SHARED_INTERMEDIATE_DIR.
+
 const char* const xwalk::XWalkContentClient::kNaClPluginName = "Native Client";
 
 namespace {
@@ -56,6 +58,62 @@ const int32 kPepperFlashPermissions = ppapi::PERMISSION_DEV |
                                       ppapi::PERMISSION_PRIVATE |
                                       ppapi::PERMISSION_BYPASS_USER_GESTURE |
                                       ppapi::PERMISSION_FLASH;
+
+const char kWidevineCdmPluginExtension[] = "";
+
+const int32 kWidevineCdmPluginPermissions = ppapi::PERMISSION_DEV |
+                                            ppapi::PERMISSION_PRIVATE;
+
+void ComputeBuiltInPlugins(std::vector<content::PepperPluginInfo>* plugins) {
+#if defined(WIDEVINE_CDM_AVAILABLE) && defined(ENABLE_PEPPER_CDMS) && \
+    !defined(WIDEVINE_CDM_IS_COMPONENT)
+
+  base::FilePath path;
+
+  static bool skip_widevine_cdm_file_check = false;
+  if (PathService::Get(xwalk::FILE_WIDEVINE_CDM_ADAPTER, &path)) {
+    if (skip_widevine_cdm_file_check || base::PathExists(path)) {
+      content::PepperPluginInfo widevine_cdm;
+      widevine_cdm.is_out_of_process = true;
+      widevine_cdm.path = path;
+      widevine_cdm.name = kWidevineCdmDisplayName;
+      widevine_cdm.description = kWidevineCdmDescription +
+                                 std::string(" (version: ") +
+                                 "1.23.4)";
+     // widevine_cdm.version = WIDEVINE_CDM_VERSION_STRING;
+      content::WebPluginMimeType widevine_cdm_mime_type(
+          kWidevineCdmPluginMimeType,
+          kWidevineCdmPluginExtension,
+          kWidevineCdmPluginMimeTypeDescription);
+
+      // Add the supported codecs as if they came from the component manifest.
+      std::vector<std::string> codecs;
+      codecs.push_back(kCdmSupportedCodecVorbis);
+      codecs.push_back(kCdmSupportedCodecVp8);
+      codecs.push_back(kCdmSupportedCodecVp9);
+#if defined(USE_PROPRIETARY_CODECS)
+      codecs.push_back(kCdmSupportedCodecAac);
+      codecs.push_back(kCdmSupportedCodecAvc1);
+#endif  // defined(USE_PROPRIETARY_CODECS)
+      std::string codec_string =
+          JoinString(codecs, kCdmSupportedCodecsValueDelimiter);
+      widevine_cdm_mime_type.additional_param_names.push_back(
+          base::ASCIIToUTF16(kCdmSupportedCodecsParamName));
+      widevine_cdm_mime_type.additional_param_values.push_back(
+          base::ASCIIToUTF16(codec_string));
+
+      widevine_cdm.mime_types.push_back(widevine_cdm_mime_type);
+      widevine_cdm.permissions = kWidevineCdmPluginPermissions;
+      plugins->push_back(widevine_cdm);
+
+      skip_widevine_cdm_file_check = true;
+    } else {
+      DVLOG(1) << "**********base::PathExists(path) doesn't exist! path = " << path.value();
+    }
+  }
+#endif  // defined(WIDEVINE_CDM_AVAILABLE) && defined(ENABLE_PEPPER_CDMS) &&
+        // !defined(WIDEVINE_CDM_IS_COMPONENT)
+}
 
 content::PepperPluginInfo CreatePepperFlashInfo(const base::FilePath& path,
                                                 const std::string& version) {
@@ -176,6 +234,7 @@ void XWalkContentClient::AddPepperPlugins(
 #endif
 
 #if defined(ENABLE_PLUGINS)
+  ComputeBuiltInPlugins(plugins);
   AddPepperFlashFromCommandline(plugins);
 #endif
 }

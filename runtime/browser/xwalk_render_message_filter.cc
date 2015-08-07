@@ -78,16 +78,20 @@ void XWalkRenderMessageFilter::OnIsInternalPluginAvailableForMimeType(
   PluginService::GetInstance()->GetInternalPlugins(&plugins);
 
   bool is_plugin_disabled = false;
+  DVLOG(1) << "**********plugins.size() = " << plugins.size()
+           << ", mime_type = " << mime_type;
   for (size_t i = 0; i < plugins.size(); ++i) {
     const WebPluginInfo& plugin = plugins[i];
     const std::vector<content::WebPluginMimeType>& mime_types =
         plugin.mime_types;
+    DVLOG(1) << "**********---**** ";
     for (size_t j = 0; j < mime_types.size(); ++j) {
+      DVLOG(1) << "**********mime_types[" << j << "] = " << mime_types[j].mime_type;
       if (mime_types[j].mime_type == mime_type) {
-        if (!context_.IsPluginEnabled(plugin)) {
-          is_plugin_disabled = true;
-          break;
-        }
+//        if (!context_.IsPluginEnabled(plugin)) {
+//          is_plugin_disabled = true;
+//          break;
+//        }
 
         *is_available = true;
         *additional_param_names = mime_types[j].additional_param_names;

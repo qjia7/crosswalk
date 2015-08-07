@@ -22,6 +22,8 @@
 #import "base/mac/mac_util.h"
 #endif
 
+#include "widevine_cdm_version.h" // In SHARED_INTERMEDTATE_DIR
+
 namespace xwalk {
 
 namespace {
@@ -67,6 +69,10 @@ base::FilePath GetFrameworkBundlePath() {
 // File name of the internal NaCl plugin on different platforms.
 const base::FilePath::CharType kInternalNaClPluginFileName[] =
     FILE_PATH_LITERAL("internal-nacl-plugin");
+
+
+const base::FilePath::CharType kWidevineCdmBaseDirectory[] =
+    FILE_PATH_LITERAL("WidevineCDM");
 
 #if defined(OS_TIZEN)
 base::FilePath GetAppPath() {
@@ -133,6 +139,7 @@ bool GetInternalPluginsDirectory(base::FilePath* result) {
 
 bool PathProvider(int key, base::FilePath* path) {
   base::FilePath cur;
+  DVLOG(1) << "**********key = " << key;
   switch (key) {
     case xwalk::DIR_DATA_PATH:
       return GetXWalkDataPath(path);
@@ -173,6 +180,29 @@ bool PathProvider(int key, base::FilePath* path) {
 #endif
       cur = cur.Append(FILE_PATH_LITERAL("pnacl"));
       break;
+#if defined(WIDEVINE_CDM_AVAILABLE) && defined(ENABLE_PEPPER_CDMS)
+#if defined(WIDEVINE_CDM_IS_COMPONENT)
+    case xwalk::DIR_COMPONENT_WIDEVINE_CDM:
+      if (!PathService::Get(xwalk::DIR_DATA_PATH, &cur)) {
+        DVLOG(1) << "**********xwalk::DIR_DATA_PATH false";
+        return false;
+      }
+      DVLOG(1) << "**********xwalk::DIR_DATA_PATH true";
+      cur = cur.Append(kWidevineCdmBaseDirectory);
+      break;
+#endif  // defined(WIDEVINE_CDM_IS_COMPONENT)
+    // TODO(xhwang): FILE_WIDEVINE_CDM_ADAPTER has different meanings.
+    // In the component case, this is the source adapter. Otherwise, it is the
+    // actual Pepper module that gets loaded.
+    case xwalk::FILE_WIDEVINE_CDM_ADAPTER:
+      if (!GetInternalPluginsDirectory(&cur)) {
+        DVLOG(1) << "**********GetInternalPluginsDirectory false";
+        return false;
+      }
+      DVLOG(1) << "**********GetInternalPluginsDirectory true";
+      cur = cur.AppendASCII(kWidevineCdmAdapterFileName);
+      break;
+#endif  // defined(WIDEVINE_CDM_AVAILABLE) && defined(ENABLE_PEPPER_CDMS)
     case xwalk::DIR_TEST_DATA:
       if (!PathService::Get(base::DIR_SOURCE_ROOT, &cur))
         return false;

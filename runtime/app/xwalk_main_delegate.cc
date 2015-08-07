@@ -45,6 +45,7 @@ bool XWalkMainDelegate::BasicStartupComplete(int* exit_code) {
   OverrideFrameworkBundlePath();
   OverrideChildProcessPath();
 #elif defined(OS_WIN)
+  DVLOG(1) << "************BasicStartupComplete";
   base::CommandLine* command_line = base::CommandLine::ForCurrentProcess();
   std::string process_type =
           command_line->GetSwitchValueASCII(switches::kProcessType);
@@ -61,7 +62,9 @@ bool XWalkMainDelegate::BasicStartupComplete(int* exit_code) {
 }
 
 void XWalkMainDelegate::PreSandboxStartup() {
+  DVLOG(1) << "************PreSandboxStartup";
   RegisterPathProvider();
+  //component_updater::RegisterPathProvider(xwalk::DIR_DATA_PATH);
   InitializeResourceBundle();
 }
 
