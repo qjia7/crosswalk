@@ -74,11 +74,8 @@
           'dependencies': [
             '../../components/components.gyp:storage_monitor',
             '../../media/media.gyp:media',
-            '../../third_party/ffmpeg/ffmpeg.gyp:ffmpeg',
           ],
           'sources': [
-            'device_capabilities/av_codecs_provider_ffmpeg.cc',
-            'device_capabilities/av_codecs_provider_ffmpeg.h',
             'device_capabilities/storage_info_provider_chromium.cc',
             'device_capabilities/storage_info_provider_chromium.h',
           ],

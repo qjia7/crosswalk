@@ -13,9 +13,10 @@ namespace sysapps {
 
 // static
 AVCodecsProvider* SysAppsManager::GetAVCodecsProvider() {
-  CR_DEFINE_STATIC_LOCAL(AVCodecsProviderFFmpeg, provider, ());
+ // CR_DEFINE_STATIC_LOCAL(AVCodecsProviderFFmpeg, provider, ());
 
-  return &provider;
+ // return &provider;
+  return NULL;
 }
 
 // static
