@@ -42,6 +42,8 @@ const char kAllowRunningInsecureContent[]   = "allow-running-insecure-content";
 // page. This switch overrides this to block this lesser mixed-content problem.
 const char kNoDisplayingInsecureContent[]   = "no-displaying-insecure-content";
 
+const char kDisableComponentUpdate[] = "disable-component-update";
+
 #if defined(ENABLE_PLUGINS)
 // Use the PPAPI (Pepper) Flash found at the given path.
 const char kPpapiFlashPath[] = "ppapi-flash-path";

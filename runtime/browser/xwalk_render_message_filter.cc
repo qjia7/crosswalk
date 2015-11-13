@@ -78,6 +78,7 @@ void XWalkRenderMessageFilter::OnIsInternalPluginAvailableForMimeType(
   PluginService::GetInstance()->GetInternalPlugins(&plugins);
 
   bool is_plugin_disabled = false;
+  fprintf(stderr, "**********plugins.size() = %d, mime_type = %d", plugins.size(), mime_type.c_str());
   DVLOG(1) << "**********plugins.size() = " << plugins.size()
            << ", mime_type = " << mime_type;
   for (size_t i = 0; i < plugins.size(); ++i) {

@@ -28,6 +28,7 @@
 #include "ui/base/l10n/l10n_util.h"
 #include "ui/base/resource/resource_bundle.h"
 #include "xwalk/application/common/constants.h"
+#include "xwalk/runtime/common/widevine_cdm_constants.h"
 #include "xwalk/runtime/common/xwalk_switches.h"
 #include "xwalk/runtime/common/xwalk_paths.h"
 #if (defined(OS_TIZEN))
@@ -58,11 +59,6 @@ const int32 kPepperFlashPermissions = ppapi::PERMISSION_DEV |
                                       ppapi::PERMISSION_PRIVATE |
                                       ppapi::PERMISSION_BYPASS_USER_GESTURE |
                                       ppapi::PERMISSION_FLASH;
-
-const char kWidevineCdmPluginExtension[] = "";
-
-const int32 kWidevineCdmPluginPermissions = ppapi::PERMISSION_DEV |
-                                            ppapi::PERMISSION_PRIVATE;
 
 void ComputeBuiltInPlugins(std::vector<content::PepperPluginInfo>* plugins) {
 #if defined(WIDEVINE_CDM_AVAILABLE) && defined(ENABLE_PEPPER_CDMS) && \

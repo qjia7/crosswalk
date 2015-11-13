@@ -10,6 +10,7 @@
 #include "base/memory/scoped_ptr.h"
 #include "base/memory/scoped_vector.h"
 #include "base/values.h"
+#include "components/component_updater/component_updater_service.h"
 
 #include "xwalk/runtime/browser/storage_component.h"
 
@@ -81,6 +82,8 @@ class XWalkRunner {
   void EnableRemoteDebugging(int port);
   void DisableRemoteDebugging();
 
+  component_updater::ComponentUpdateService* component_updater();
+
  protected:
   XWalkRunner();
 
@@ -135,6 +138,7 @@ class XWalkRunner {
   scoped_ptr<XWalkBrowserContext> browser_context_;
   scoped_ptr<extensions::XWalkExtensionService> extension_service_;
   scoped_ptr<XWalkAppExtensionBridge> app_extension_bridge_;
+  scoped_ptr<component_updater::ComponentUpdateService> component_updater_;
 
   // XWalkRunner uses the XWalkComponent interface to be able to handle
   // different subsystems and call them in specific situations, e.g. when

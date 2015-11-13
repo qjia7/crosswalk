@@ -161,6 +161,7 @@ static void AddPepperBasedWidevine(
   if (!IsPepperCdmAvailable(kWidevineCdmPluginMimeType,
                             &additional_param_names,
                             &additional_param_values)) {
+    fprintf(stderr, "****Widevine CDM is not currently available.");
     DVLOG(1) << "Widevine CDM is not currently available.";
     return;
   }

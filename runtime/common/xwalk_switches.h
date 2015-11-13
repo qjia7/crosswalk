@@ -19,6 +19,7 @@ extern const char kXWalkAllowExternalExtensionsForRemoteSources[];
 extern const char kXWalkDataPath[];
 extern const char kAllowRunningInsecureContent[];
 extern const char kNoDisplayingInsecureContent[];
+extern const char kDisableComponentUpdate[];
 
 #if defined(OS_ANDROID)
 extern const char kXWalkProfileName[];

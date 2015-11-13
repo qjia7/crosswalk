@@ -15,6 +15,7 @@
 #include "base/message_loop/message_loop.h"
 #include "base/strings/string_number_conversions.h"
 #include "cc/base/switches.h"
+#include "components/component_updater/component_updater_service.h"
 #include "content/public/browser/browser_thread.h"
 #include "content/public/common/content_switches.h"
 #include "content/public/common/main_function_params.h"
@@ -30,6 +31,7 @@
 #if defined(USE_GTK_UI)
 #include "xwalk/runtime/browser/ui/gtk2_ui.h"
 #endif
+#include "xwalk/runtime/browser/component_updater/widevine_cdm_component_installer.h"
 #include "xwalk/runtime/browser/xwalk_runner.h"
 #include "xwalk/runtime/common/xwalk_runtime_features.h"
 #include "xwalk/runtime/common/xwalk_switches.h"
@@ -224,6 +226,14 @@ void XWalkBrowserMainParts::PreMainMessageLoopRun() {
     int port;
     base::StringToInt(port_str, &port);
     xwalk_runner_->EnableRemoteDebugging(port);
+  }
+  if (!command_line->HasSwitch(switches::kDisableComponentUpdate)) {
+    component_updater::ComponentUpdateService* cus =
+      xwalk_runner_->component_updater();
+
+#if !defined(OS_CHROMEOS) && !defined(OS_ANDROID)
+    RegisterWidevineCdmComponent(cus);
+#endif  // !defined(OS_CHROMEOS) && !defined(OS_ANDROID)
   }
 
   NativeAppWindow::Initialize();
