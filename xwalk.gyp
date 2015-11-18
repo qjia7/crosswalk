@@ -284,6 +284,8 @@
         'runtime/common/android/xwalk_message_generator.h',
         'runtime/common/android/xwalk_render_view_messages.cc',
         'runtime/common/android/xwalk_render_view_messages.h',
+        'runtime/common/logging_xwalk.cc',
+        'runtime/common/logging_xwalk.h',
         'runtime/common/paths_mac.h',
         'runtime/common/paths_mac.mm',
         'runtime/common/widevine_cdm_constants.cc',

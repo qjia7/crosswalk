@@ -144,6 +144,29 @@ bool PathProvider(int key, base::FilePath* path) {
     case xwalk::DIR_DATA_PATH:
       return GetXWalkDataPath(path);
       break;
+    case xwalk::DIR_LOGS:
+#ifdef NDEBUG
+      // Release builds write to the data dir
+      return PathService::Get(chrome::DIR_DATA_PATH, path);
+#else
+      // Debug builds write next to the binary (in the build tree)
+#if defined(OS_MACOSX)
+      if (!PathService::Get(base::DIR_EXE, path))
+        return false;
+      if (base::mac::AmIBundled()) {
+        // If we're called from chrome, dump it beside the app (outside the
+        // app bundle), if we're called from a unittest, we'll already
+        // outside the bundle so use the exe dir.
+        // exe_dir gave us .../Chromium.app/Contents/MacOS/Chromium.
+        *path = path->DirName();
+        *path = path->DirName();
+        *path = path->DirName();
+      }
+      return true;
+#else
+      return PathService::Get(base::DIR_EXE, path);
+#endif  // defined(OS_MACOSX)
+#endif  // NDEBUG
     case xwalk::DIR_INTERNAL_PLUGINS:
       if (!GetInternalPluginsDirectory(&cur))
         return false;
